@@ -5,22 +5,57 @@ const fs = require('fs')
 
 
 
-let basic = Buffer.from(process.env.USERNAME + ":" + process.env.PASSWORD, "utf-8").toString("base64");
+let basicAuth = Buffer.from(process.env.USERNAME + ":" + process.env.PASSWORD, "utf-8").toString("base64");
 
-let api = "https://***REMOVED***/webacs/api/v3/data/";
-let resource = "Clients.json?";
-let query = [
-  ".firstResult=0",
-  ".maxResults=20",
-  "vlanId=in(208,%20104)",
-  "securityPolicyStatus=%22PASSED%22"
-].join("&");
+let apiUrl = "https://***REMOVED***/webacs/api/v3/data/";
 
 let headers = {
   headers: {
-    Authorization: "Basic " + basic
+    Authorization: "Basic " + basicAuth
   }
 };
+
+function getClientIds(apiUrl, headers) {
+  return new Promise(async function(fulfill, reject) {
+    let resource = "Clients.json?"
+    let query = [
+      ".firstResult=0",
+      ".maxResults=20",
+      "vlanId=in(208,%20104)",
+      "securityPolicyStatus=%22PASSED%22"
+    ].join("&");
+
+    axios.get(apiUrl + resource + query, headers)
+    .then(response => {
+      let userList = response.data.queryResponse.entityId
+      fulfill(userList.map(user => user.$))
+    })
+    .catch(err => {
+      reject(err)
+    })
+  })
+}
+
+function getClientById(apiUrl, clientId) {
+  return new Promise(async function(fulfill, reject) {
+    let resource = "Clients/" + clientId + ".json?"
+
+    axios.get(apiUrl + resource, headers)
+    .then(response => {
+      let userList = response.data.queryResponse.entityId
+      fulfill(userList.map(user => user.$))
+    })
+    .catch(err => {
+      reject(err)
+    })
+
+  })
+}
+
+
+
+
+
 
 async function getUsers(fullQuery, headers) {
   return new Promise(async function(fulfill, reject) {
