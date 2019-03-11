@@ -5,7 +5,7 @@ const errorHandler = require('./lib/errorHandler')
 
 let basicAuth = Buffer.from(process.env.USERNAME + ':' + process.env.PASSWORD, 'utf-8').toString('base64')
 
-let apiUrl = 'https://***REMOVED***/webacs/api/v3/data/';
+let apiUrl = 'https://***REMOVED***/webacs/api/v3/';
 
 let headers = {
   headers: {
@@ -22,7 +22,7 @@ let headers = {
  */
 function getClientIds (apiUrl, headers) {
   return new Promise(async function (resolve, reject) {
-    let resource = 'Clients.json?'
+    let resource = 'data/Clients.json?'
     let query = [
       '.firstResult=0',
       '.maxResults=20',
@@ -61,7 +61,7 @@ function getClientIds (apiUrl, headers) {
  */
 function getClientById (apiUrl, headers, clientId) {
   return new Promise(async function (resolve, reject) {
-    let resource = 'Clients/' + clientId + '.json?'
+    let resource = 'data/Clients/' + clientId + '.json?'
 
     let userList = {}
 
@@ -91,9 +91,36 @@ function getClientById (apiUrl, headers, clientId) {
   })
 }
 
-// getUsers(api + resource + query, headers)
-// .then(users => {console.log(users)})
-// .catch(err => {console.error(err)})
+function getClientsByLocation(apiUrl, headers) {
+  let reportName = 'reportTitle=test-clientcount-per-floor'
+  let resource = 'op/reportService/report.json?' + reportName
+
+  let clients = {
+    locations = [
+      {
+        // TODO: Etasjer + rom
+        location: "Porsgrunn",
+        timestamps: [
+          {
+            time: "Sat Mar 09 12:29:48 CET 2019",
+            clientCount: 300
+          }
+        ]
+      }
+    ]
+  }
+
+  // TODO: Parse data, array per location
+  axios.get(apiUrl + resource, headers)
+      .then(response => {
+        userList = response.data.queryResponse.entityId
+        resolve(userList.map(user => user.$))
+      })
+      .catch(err => {
+        reject(err)
+      })
+}
+
 
 getClientIds(apiUrl, headers)
   .then(users => { console.log(users) })
