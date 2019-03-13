@@ -2,7 +2,8 @@
 require('dotenv').config()
 const axios = require('axios')
 const date = require('date-and-time')
-const db = require('./lib/influxdb-interaction')
+// const db = require('./lib/influxdb-interaction')
+const fs = require('fs')
 const errorHandler = require('./lib/errorHandler')
 
 // TODO: Remove when done
@@ -18,22 +19,50 @@ let headers = {
   }
 }
 
-function parseIfDate (dateTimeString, dataAttribute) {
+/**
+ * Parses data returned from Prime.
+ * dataAttribute === 'eventTime' -> dateTime.
+ * dataAttribute === 'key' -> locationObject
+ * dataAttribute === 'assoCount' or 'authCount' -> Int
+ * @param  {String} dataString URL to the API including path.
+ * @param  {String} dataAttribute Headers to include in the request.
+ * @return Formatted value, depending on dataAttribute.
+ */
+function primeDataParser (dataString, dataAttribute) {
   // 'Sat Mar 09 12:29:48 CET 2019'
   if (dataAttribute === 'eventTime') {
     try {
-      let dateTime = dateTimeString.split(' ')
+      let dateTime = dataString.split(' ')
+
       dateTime.splice(0, 1)
       dateTime.splice(3, 1)
       dateTime = dateTime.join(' ')
+
       dateTime = date.parse(dateTime, 'MMM DD HH:mm:ss YYYY')
-      return isNaN(dateTime) ? dateTimeString : dateTime
+
+      return isNaN(dateTime) ? dataString : dateTime
     } catch (error) {
       errorHandler(error)
-      return dateTimeString
+      return dataString
     }
+  } else if (dataAttribute === 'key') {
+    let formattedLocation = {}
+    dataString = dataString.split(' > ')
+
+    if (dataString[0] === 'location') {
+      formattedLocation.location = dataString[1]
+      formattedLocation.building = dataString[2]
+    } else {
+      formattedLocation.location = dataString[0]
+      formattedLocation.building = dataString[1]
+      formattedLocation.floor = dataString[2]
+    }
+
+    return formattedLocation
+  } else if (dataAttribute === 'assoCount' || dataAttribute === 'authCount') {
+    return Number(dataString)
   } else {
-    return dateTimeString
+    return dataString
   }
 }
 
@@ -67,7 +96,7 @@ function getClientIds (apiUrl, headers) {
 }
 
 /**
- * Returns a promise with IDs of clients
+ * Returns a promise with client infomation.
  * @param  {String} apiUrl URL to the API including path.
  * @param  {Object} headers Headers to include in the request.
  * @param  {String} headers.Authorization A basic auth string.
@@ -80,8 +109,8 @@ function getClientById (apiUrl, headers, clientId) {
 
     let userList = {}
 
-    //axios.get(apiUrl + resource, headers)
-    dummyData('./sample-data/clients/' + clientId + '.json')
+    axios.get(apiUrl + resource, headers)
+    //dummyData('./sample-data/clients/' + clientId + '.json')
       .then(response => {
         resolve(response.data.queryResponse.entity[0].clientsDTO)
       })
@@ -92,7 +121,7 @@ function getClientById (apiUrl, headers, clientId) {
 }
 
 /**
- * Returns a promise with IDs of clients
+ * Returns a promise with client count for each location.
  * @param  {String} apiUrl URL to the API including path.
  * @param  {Object} headers Headers to include in the request.
  * @param  {String} headers.Authorization A basic auth string.
@@ -117,9 +146,17 @@ function getClientsByLocation (apiUrl, headers) {
 
     // TODO: Parse data, array per location
     // axios.get(apiUrl + resource, headers)
-    dummyData('./sample-data/reports/report.json')
+    dummyData('./sample-data/reports/report.2.json')
       .then(response => {
-        let timeData = response.mgmtResponse.reportDataDTO.childReports.childReport[0].dataRows.dataRow
+        if (response.data) { response = response.data }
+
+        try {
+          fs.writeFileSync('./sample-data/reports/report.2.json', JSON.stringify(response))
+        } catch (error) {
+          errorHandler(error)
+        }
+
+        let timeData = response.mgmtResponse.reportDataDTO[0].childReports.childReport[0].dataRows.dataRow
         let dataInfo = []
 
         // Loop through each timeset and format the content to one object
@@ -128,7 +165,7 @@ function getClientsByLocation (apiUrl, headers) {
           let loc = {}
           // Loop through [location, time, assoCount, authCount] for each timeset
           location.forEach(entry => {
-            loc[entry.attributeName] = parseIfDate(entry.dataValue, entry.attributeName)
+            loc[entry.attributeName] = primeDataParser(entry.dataValue, entry.attributeName)
           })
           dataInfo.push(loc)
         })
@@ -140,16 +177,19 @@ function getClientsByLocation (apiUrl, headers) {
       })
   })
 }
+
 /*
 getClientIds(apiUrl, headers)
   .then(users => { console.log(users) })
   .catch(err => { errorHandler(err) })
-
+// */
+/*
 getClientById(apiUrl, headers, 1034344839)
   .then(users => { console.log(users) })
   .catch(err => { errorHandler(err) })
+// */
 
-*/
 getClientsByLocation(apiUrl, headers)
-  .then(users => { console.log(users) })
+  .then(users => { console.log(users.sort((a, b) => b.assoCount - a.assoCount )) })
   .catch(err => { errorHandler(err) })
+// */
