@@ -2,7 +2,7 @@
 require('dotenv').config()
 const axios = require('axios')
 const date = require('date-and-time')
-const influx = require('influx')
+const db = require('./lib/influxdb-interaction')
 const errorHandler = require('./lib/errorHandler')
 
 // TODO: Remove when done
@@ -18,7 +18,7 @@ let headers = {
   }
 }
 
-function parseIfDate(dateTimeString, dataAttribute) {
+function parseIfDate (dateTimeString, dataAttribute) {
   // 'Sat Mar 09 12:29:48 CET 2019'
   if (dataAttribute === 'eventTime') {
     try {
@@ -109,7 +109,8 @@ function getClientsByLocation (apiUrl, headers) {
         location: 'Porsgrunn',
         building: 'Bygg A',
         floor: '2 etg',
-        clients: 300
+        assoCount: 300,
+        authCount: 250
       }
     ]
     // dateTime | clients (field) | location (tag) | building (tag) | floor (tag)
@@ -119,14 +120,20 @@ function getClientsByLocation (apiUrl, headers) {
     dummyData('./sample-data/reports/report.json')
       .then(response => {
         let timeData = response.mgmtResponse.reportDataDTO.childReports.childReport[0].dataRows.dataRow
-        let info = timeData.map(dataset => dataset.entries.entry)
-          .map(dataset => dataset.map(data => (
-            {
-              [data.attributeName]: parseIfDate(data.dataValue, data.attributeName)
-            }
-          )))
+        let dataInfo = []
 
-        resolve(info)
+        // Loop through each timeset and format the content to one object
+        timeData.forEach(location => {
+          location = location.entries.entry
+          let loc = {}
+          // Loop through [location, time, assoCount, authCount] for each timeset
+          location.forEach(entry => {
+            loc[entry.attributeName] = parseIfDate(entry.dataValue, entry.attributeName)
+          })
+          dataInfo.push(loc)
+        })
+
+        resolve(dataInfo)
       })
       .catch(err => {
         reject(err)
