@@ -14,6 +14,7 @@
     "dotenv": "^6.2.0",
     "fetch": "^1.1.0",
     "influx": "^5.0.7",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "normalize-date": "0.0.4"
   }
 }
