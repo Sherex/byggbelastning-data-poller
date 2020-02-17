@@ -1,3 +1,7 @@
+# Custom Directories
+docker/*/volumes
+sample-data
+
 # Logs
 logs
 *.log
