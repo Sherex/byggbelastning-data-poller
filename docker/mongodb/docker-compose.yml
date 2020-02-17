@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  mongodb:
+    container_name: prime-mongodb
+    image: mongo:latest
+    volumes:
+      - /data/db
+    ports: 
+      - 27017:27017
+    networks:
+      - mongodb
+
+networks:
+  mongodb:

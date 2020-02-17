@@ -1,1 +1,0 @@
-docker run -p 8888:8888 -d --net=influxdb --name=chronograf chronograf --influxdb-url=http://influxdb:8086
