@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.19.2",
     "byline": "^5.0.0",
-    "csv-parse": "^4.8.5",
+    "csv-parse": "^4.8.6",
     "csv-parser": "^2.3.2",
     "date-and-time": "^0.12.0",
     "dotenv": "^8.2.0",
@@ -21,6 +21,7 @@
     "influx": "^5.5.1",
     "node-fetch": "^2.6.0",
     "normalize-date": "0.0.4",
-    "oui": "^10.0.39"
+    "oui": "^10.0.46",
+    "pg": "^7.18.2"
   }
 }

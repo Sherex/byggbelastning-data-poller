@@ -1,13 +1,13 @@
 require('dotenv').config()
-const db = require('./lib/influxdb-interaction')
+const db = require('./lib/timescaledb-interaction')
 const getClientsPerLocation = require('./lib/get-clients-per-location')
 const getClients = require('./lib/get-clients-v2')
 const errorHandler = require('./lib/error-handler')
 const macVendorStats = require('./lib/stats/macVendorStats')
 
 // DEBUG
-const perLocation = false
-const writeToDb = false
+const perLocation = true
+const writeToDb = true
 
 // Environment variables
 const basicAuth = Buffer.from(process.env.USERNAME + ':' + process.env.PASSWORD, 'utf-8').toString('base64')
@@ -38,7 +38,7 @@ if (perLocation && writeToDb) {
   getClientsPerLocation(apiUrl, headers, primeReportNamePerFloor)
     .then(async data => {
       await db.createDb()
-      await db.writeToDb(data)
+      await db.insertClientLocations(data)
     })
     .catch(err => { errorHandler(err) })
 } else if (!perLocation && writeToDb) {
