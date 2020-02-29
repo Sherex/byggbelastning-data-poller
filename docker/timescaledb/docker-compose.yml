@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  grafana:
+    container_name: prime-grafana
+    image: grafana/grafana
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./volumes/grafana:/var/lib/grafana
+    networks:
+      - timescaledb
+    depends_on:
+      - timescaledb
+
+  timescaledb:
+    container_name: prime-timescaledb
+    image: timescale/timescaledb:latest-pg10
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=prime_clients
+      - POSTGRES_USER=prime_user
+      - POSTGRES_PASSWORD=testPassDoChange!312
+    volumes:
+      - "./volumes/timescale/db:/var/lib/postgresql/data"
+    networks:
+      - timescaledb
+
+networks:
+  timescaledb:
+    external: false
