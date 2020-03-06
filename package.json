@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "start-db": "docker-compose -f ./docker/influxdb/docker-compose.yml up -d",
-    "stop-db": "docker-compose -f ./docker/influxdb/docker-compose.yml down"
+    "start-db": "docker-compose -f ./docker/timescaledb/docker-compose.yml up -d",
+    "stop-db": "docker-compose -f ./docker/timescaledb/docker-compose.yml down",
+    "flush-db": "npm run stop-db && rm -r ./docker/timescaledb/volumes/timescale && npm run start-db"
   },
   "author": "",
   "license": "ISC",
