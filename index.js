@@ -21,7 +21,6 @@ const headers = {
   }
 }
 
-
 ;(async () => {
   if (perLocation) {
     console.log(await getClientsPerLocation(apiUrl, headers, primeReportNamePerFloor))
