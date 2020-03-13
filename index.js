@@ -1,5 +1,5 @@
 require('dotenv').config()
-const db = require('./lib/timescaledb-interaction')
+const db = require('./lib/db/timescaledb-interaction')
 const getClientsPerLocation = require('./lib/get-clients-per-location')
 const getClients = require('./lib/get-clients-v2')
 const errorHandler = require('./lib/error-handler')
