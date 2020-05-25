@@ -14,7 +14,7 @@ services:
 
   timescaledb:
     container_name: prime-timescaledb
-    image: timescale/timescaledb:latest-pg10
+    image: timescale/timescaledb:latest-pg12
     ports:
       - 5432:5432
     environment:
@@ -25,6 +25,10 @@ services:
       - "./volumes/timescale/db:/var/lib/postgresql/data"
     networks:
       - timescaledb
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      timeout: 5s
+      retries: 3
 
 networks:
   timescaledb:
