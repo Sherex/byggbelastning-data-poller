@@ -36,14 +36,14 @@ const headers = {
 if (perLocation && writeToDb) {
   getClientsPerLocation(apiUrl, headers, primeReportNamePerFloor)
     .then(async data => {
-      await db.createDb()
+      await db.setupDB()
       await db.insertClientLocations(data)
     })
     .catch(err => { errorHandler(err) })
 } else if (!perLocation && writeToDb) {
   getClients(apiUrl, headers, primeReportNameClients)
     .then(async data => {
-      await db.createDb()
+      await db.setupDB()
       await db.writeToDb(data)
     })
     .catch(err => { errorHandler(err) })
