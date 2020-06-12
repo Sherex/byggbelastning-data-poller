@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "byline": "^5.0.0",
-    "csv-parser": "^2.3.2",
+    "csv-parser": "^2.3.3",
     "date-and-time": "^0.13.1",
     "dotenv": "^8.2.0",
     "influx": "^5.5.1",
