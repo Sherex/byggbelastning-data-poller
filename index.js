@@ -1,7 +1,7 @@
 require('dotenv').config()
 const db = require('./lib/db/timescaledb-interaction')
 const getClientsPerLocation = require('./lib/prime/get-clients-per-location')
-const getClients = require('./lib/prime/get-clients-v2')
+const getClients = require('./lib/prime/get-clients')
 const errorHandler = require('./lib/error-handler')
 const macVendorStats = require('./lib/stats/macVendorStats')
 
