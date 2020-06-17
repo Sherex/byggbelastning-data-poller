@@ -2,16 +2,21 @@
 Azure function app to gather wireless device locations to a DB.
 
 ## Development
-```js
-// Clone the repo and enter it's directory, then:
-npm i
+```sh
+# Clone the repo and enter it's directory, then:
+$ npm i
 
-// If you have Docker installed you can start a dev DB with:
-npm run start-db
-// Stop DB
-npm run stop-db
-// Flush DB
-npm run flush-db
+# If you have Docker installed you can start a dev DB with:
+$ npm run docker:start
+# Stop DB container 
+$ npm run docker:stop
+# Stop DB container, delete the DB directory, then start the DB container
+$ npm run docker:clean_db
+
+# Creates all tables
+$ npm run db:setup
+# Drops all tables
+$ npm run db:flush
 ```
 
 ## API Docs
