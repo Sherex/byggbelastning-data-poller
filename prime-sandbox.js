@@ -2,7 +2,6 @@ require('dotenv').config()
 const db = require('./lib/db/timescaledb-interaction')
 const createPrime = require('./lib/prime')
 const errorHandler = require('./lib/error-handler')
-const macVendorStats = require('./lib/stats/macVendorStats')
 
 // TODO: Convert all functions into factory functions, one for MSE and one for Prime
 
@@ -25,17 +24,13 @@ const { getClientsPerLocation, getClients } = createPrime({
     const data = await getClientsPerLocation(primeReportNamePerFloor)
     console.log(data.length)
     if (writeToDb) {
-      await db.setupDB()
       await db.insertClientLocations(data)
     }
   } else {
     const data = await getClients(primeReportNameClients)
     console.log(data.length)
     if (writeToDb) {
-      await db.setupDB()
       await db.writeToDb(data)
     }
-    // Get number of devices by vendor
-    // console.log(macVendorStats(data))
   }
 })().catch(errorHandler)
