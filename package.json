@@ -21,7 +21,6 @@
     "csv-parser": "^2.3.3",
     "date-and-time": "^0.13.1",
     "dotenv": "^8.2.0",
-    "influx": "^5.5.1",
     "normalize-date": "0.0.4",
     "pg": "^8.2.1",
     "pg-format": "^1.0.4"
