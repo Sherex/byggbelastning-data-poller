@@ -5,6 +5,8 @@ Azure function app to gather wireless device locations to a DB.
 ```sh
 # Clone the repo and enter it's directory, then:
 $ npm i
+# Rename dev.env to .env then edit it
+$ mv dev.env .env
 
 # If you have Docker installed you can start a dev DB with:
 $ npm run docker:start
