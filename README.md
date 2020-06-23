@@ -18,7 +18,10 @@ $ npm run docker:clean_db
 # Creates all tables
 $ npm run db:setup
 # Drops all tables
-$ npm run db:flush
+$ npm run db:drop_all_tables
+# Exports all columns from specified table
+# Prints all available tables if none are specified
+$ npm run db:export -- {table_name}
 ```
 
 ## API Docs
