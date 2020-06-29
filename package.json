@@ -26,5 +26,8 @@
     "p-limit": "^3.0.1",
     "pg": "^8.2.1",
     "pg-format": "^1.0.4"
+  },
+  "devDependencies": {
+    "standard": "^14.3.4"
   }
 }
