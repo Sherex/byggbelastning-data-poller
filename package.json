@@ -10,7 +10,7 @@
     "docker:stop": "docker-compose -f ./docker/timescaledb/docker-compose.yml down",
     "docker:clean_db": "npm run stop-db && rm -r ./docker/timescaledb/volumes/timescale && npm run start-db",
     "db:setup": "node lib/tools/setup-db-cli.js setup",
-    "db:drop_all_tables": "node lib/tools/setup-db-cli.js drop_all_tables",
+    "db:drop_tables": "node lib/tools/setup-db-cli.js drop_tables",
     "db:export": "node lib/tools/export-to-csv.js"
   },
   "author": "Ingar Helgesen (https://github.com/sherex)",
