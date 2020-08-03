@@ -3,11 +3,9 @@ const db = require('./lib/db/timescaledb-interaction')
 const createPrime = require('./lib/prime')
 const errorHandler = require('./lib/error-handler')
 
-// TODO: Convert all functions into factory functions, one for MSE and one for Prime
-
 // DEBUG
-const perLocation = false
-const writeToDb = false
+const perLocation = true
+const writeToDb = true
 
 // Environment variables
 const primeReportNamePerFloor = process.env.PRIME_REPORT_NAME_CLIENT_PER_FLOOR
@@ -21,16 +19,20 @@ const { getClientsPerLocation, getClients } = createPrime({
 
 ;(async () => {
   if (perLocation) {
+    console.log((await db.query('SELECT COUNT(id) FROM clients_location')).rows[0].count)
     const data = await getClientsPerLocation(primeReportNamePerFloor)
-    console.log(data.length)
     if (writeToDb) {
       await db.insertClientLocations(data)
+    } else {
+      console.log(data.length)
     }
+    console.log((await db.query('SELECT COUNT(id) FROM clients_location')).rows[0].count)
   } else {
     const data = await getClients(primeReportNameClients)
-    console.log(data.length)
     if (writeToDb) {
       await db.writeToDb(data)
+    } else {
+      console.log(data.length)
     }
   }
 })().catch(errorHandler)
