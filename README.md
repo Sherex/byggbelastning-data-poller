@@ -1,20 +1,28 @@
 # Cisco-prime-client-info
 Azure function app to gather wireless device locations to a DB.
 
+## TODO
+- [ ] Get latest time inserted into DB, stop API query when time is reached at API page
+
 ## Development
+### Cloning
 ```sh
 # Clone the repo and enter it's directory, then:
 $ npm i
 # Rename dev.env to .env then edit it
 $ mv dev.env .env
-
+```
+### Docker scripts
+```sh
 # If you have Docker installed you can start a dev DB with:
 $ npm run docker:start
 # Stop DB container 
 $ npm run docker:stop
 # Stop DB container, delete the DB directory, then start the DB container
 $ npm run docker:clean_db
-
+```
+### Database scripts
+```sh
 # Creates all tables
 $ npm run db:setup
 # Drops specified tables, or all if '*' is used
