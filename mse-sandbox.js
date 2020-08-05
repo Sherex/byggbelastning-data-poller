@@ -19,10 +19,10 @@ const mse = createMse({
 })
 
 // ;(async () => {
-//   const locations = await mse.updateLocations()
-//   // const { rows: locations } = await db.query('SELECT imageBase64,mapHierarchyString FROM locations')
+//   const locationsData = await mse.updateLocations()
+//   const { rows: locations } = await db.query('SELECT imageBase64,mapHierarchyString FROM locations')
 //   const html = `<html><body>${locations.map(loc => `<h1>${loc.maphierarchystring}</h1><img src="data:image/jpeg;base64,${loc.imagebase64}" style="width: 50em;"><br>`)}</body></html>`
-//   require('fs').writeFileSync('./test.html', html)
+//   require('fs').writeFileSync('./sample-data/mse-data/test.html', html)
 //   // console.log(locations.map(loc => ({
 //   //   ...loc,
 //   //   imageBase64: loc.imageBase64.substr(0, 20)
