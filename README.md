@@ -1,9 +1,6 @@
 # Cisco-prime-client-info
 Azure function app to gather wireless device locations to a DB.
 
-## TODO
-- [ ] Get latest time inserted into DB, stop API query when time is reached at API page
-
 ## Development
 ### Cloning
 ```sh
