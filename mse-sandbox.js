@@ -9,10 +9,13 @@ const mse = createMse({
 })
 
 ;(async () => {
-  const oldClients = await db.getClientCoords()
+  logger('debug', ['mse-sandbox', 'getting existing clients from DB'])
+  const oldClients = await db.query('SELECT COUNT(uid) FROM clients_coordinates')
+  logger('debug', ['mse-sandbox', 'updating client locations'])
   await mse.updateClientLocations()
-  const clients = await db.getClientCoords()
-  logger('debug', ['mse-sandbox', 'old clients in db', oldClients.length, 'total clients', clients.length])
+  logger('debug', ['mse-sandbox', 'getting total clients from DB'])
+  const clients = await db.query('SELECT COUNT(uid) FROM clients_coordinates')
+  logger('debug', ['mse-sandbox', 'old clients in db', oldClients.rows[0].count, 'total clients', clients.rows[0].count])
   await db.close({ immediate: true })
 })().catch(error => {
   console.error(error)
