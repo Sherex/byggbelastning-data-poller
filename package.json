@@ -16,15 +16,15 @@
   "author": "Ingar Helgesen (https://github.com/sherex)",
   "license": "MIT",
   "dependencies": {
-    "@vtfk/logger": "^2.2.0",
+    "@vtfk/logger": "^2.3.0",
     "axios": "^0.19.2",
     "byline": "^5.0.0",
     "csv-parser": "^2.3.3",
-    "date-and-time": "^0.13.1",
+    "date-and-time": "^0.14.0",
     "dotenv": "^8.2.0",
     "normalize-date": "0.0.4",
-    "p-limit": "^3.0.1",
-    "pg": "^8.2.1",
+    "p-limit": "^3.0.2",
+    "pg": "^8.3.0",
     "pg-format": "^1.0.4"
   },
   "devDependencies": {
