@@ -1,17 +1,18 @@
+/* The diagram can be found here: https://dbdiagram.io/d/5f4a96be88d052352cb544f3 */
 CREATE TABLE "location" (
   "id" UUID PRIMARY KEY,
-  "name" VARCHAR UNIQUE NOT NULL
+  "name" TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE "building" (
   "id" UUID PRIMARY KEY,
-  "name" VARCHAR UNIQUE NOT NULL,
+  "name" TEXT UNIQUE NOT NULL,
   "location_id" UUID NOT NULL
 );
 
 CREATE TABLE "floor" (
   "id" UUID PRIMARY KEY,
-  "name" VARCHAR UNIQUE NOT NULL,
+  "name" TEXT UNIQUE NOT NULL,
   "building_id" UUID NOT NULL
 );
 
@@ -28,10 +29,10 @@ CREATE TABLE "client_coordinate" (
   "id" UUID PRIMARY KEY,
   "time" TIMESTAMPTZ NOT NULL,
   "floor_id" UUID NOT NULL,
-  "cid" VARCHAR(32) NOT NULL
+  "cid" TEXT NOT NULL,
   "x" "NUMERIC(10, 4)" NOT NULL,
   "y" "NUMERIC(10, 4)" NOT NULL,
-  UNIQUE (time, cid, mapHierarchyString, x, y)
+  UNIQUE (time, floor_id, cid, x, y)
 );
 
 CREATE TABLE "floor_image" (
@@ -44,6 +45,10 @@ CREATE TABLE "floor_image" (
   "imageOffsetX" "NUMERIC(10, 6)",
   "imageOffsetY" "NUMERIC(10, 6)"
 );
+
+SELECT create_hypertable('client_count', 'time', if_not_exists => TRUE);
+
+SELECT create_hypertable('client_coordinate', 'time', if_not_exists => TRUE);
 
 ALTER TABLE "building" ADD FOREIGN KEY ("location_id") REFERENCES "location" ("id");
 
