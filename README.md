@@ -30,6 +30,10 @@ $ npm run db:drop_tables -- {table_name} {another_table_name}
 $ npm run db:export -- {table_name}
 ```
 
+### Database ER diagram
+[Diagram at dbdiagram.io](https://dbdiagram.io/d/5f4a96be88d052352cb544f3)
+![ER-diagram](assets/db-erd.png)
+
 ## API Docs
 ### Prime
  - {PRIME_URL}/webacs/api/v4/
