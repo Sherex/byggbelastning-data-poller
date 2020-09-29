@@ -30,6 +30,9 @@ $ npm run db:drop_tables -- {table_name} {another_table_name}
 $ npm run db:export -- {table_name}
 ```
 
+### Data Flow
+![Data-flow-diagram](assets/building-load-diagram.png)
+
 ### Database ER diagram
 [Diagram at dbdiagram.io](https://dbdiagram.io/d/5f4a96be88d052352cb544f3)
 ![ER-diagram](assets/db-erd.png)
