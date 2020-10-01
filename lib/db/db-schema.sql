@@ -49,3 +49,19 @@ SELECT create_hypertable('client_count', 'time', if_not_exists => TRUE);
 
 SELECT create_hypertable('client_coordinate', 'time', if_not_exists => TRUE);
 
+CREATE FUNCTION get_floor_id(location TEXT, building TEXT, floor TEXT) RETURNS INT AS $$
+    SELECT f.id
+      FROM (
+        SELECT l2.id
+          FROM location l2
+          WHERE l2.name = location
+      ) AS l
+      INNER JOIN building b
+        ON
+          b.location_id = l.id AND
+          b.name = building
+      INNER JOIN floor f
+        ON
+          f.building_id = b.id AND
+          f.name = floor
+$$ LANGUAGE SQL;
