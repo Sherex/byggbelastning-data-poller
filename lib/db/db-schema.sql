@@ -52,15 +52,33 @@ SELECT create_hypertable('client_count', 'time', if_not_exists => TRUE);
 
 SELECT create_hypertable('client_coordinate', 'first_located', if_not_exists => TRUE);
 
-CREATE TYPE get_id_from_names_return AS (location_id INT, building_id INT, floor_id INT);
+CREATE TYPE location_ids_names AS (
+  "location_id" INT,
+  "building_id" INT,
+  "floor_id"    INT,
+  "location"    TEXT,
+  "building"    TEXT,
+  "floor"       TEXT
+);
 
-CREATE FUNCTION get_id_from_names(location TEXT, building TEXT, floor TEXT)
-  RETURNS get_id_from_names_return AS $$
-    SELECT l.id, b.id, f.id
+CREATE FUNCTION get_id_from_names(
+	location TEXT,
+	building TEXT DEFAULT '',
+	floor TEXT DEFAULT ''
+) RETURNS location_ids_names AS $$
+    SELECT
+      l.id,
+      b.id,
+      f.id,
+      l.name,
+      b.name,
+      f.name
       FROM (
-        SELECT l2.id
-          FROM location l2
-          WHERE l2.name = location
+        SELECT 
+          l2.id,
+          l2.name
+        FROM location l2
+        WHERE l2.name = location
       ) AS l
       LEFT JOIN building b
         ON
@@ -70,4 +88,23 @@ CREATE FUNCTION get_id_from_names(location TEXT, building TEXT, floor TEXT)
         ON
           f.building_id = b.id AND
           f.name = floor
+$$ LANGUAGE SQL;
+
+CREATE FUNCTION get_names_from_floor_id (
+	floor_id INT
+) RETURNS location_ids_names AS $$
+    SELECT
+      l.id,
+      b.id,
+      f.id,
+      l.name,
+      b.name,
+      f.name
+	FROM floor f
+	LEFT JOIN building b
+	  ON f.building_id = b.id
+	LEFT JOIN "location" l
+	  ON b.location_id = l.id
+	WHERE
+	  f.id = floor_id;
 $$ LANGUAGE SQL;
