@@ -1,6 +1,7 @@
 const { logger } = require('@vtfk/logger')
 const createMse = require('./lib/mse')
 const db = require('./lib/db/timescaledb-interaction')
+const format = require('pg-format')
 
 const mse = createMse({
   baseUrl: process.env.MSE_API_URL,
@@ -22,37 +23,14 @@ const mse = createMse({
   console.error(error)
 })
 
-;(async () => {
-  // const floors = await mse.getFloors()
-  // // console.log(floors)
+// ;(async () => {
+//   const floors = await mse.getFloors()
 
-  // logger('debug', ['mse-sandbox', 'inserting locations to DB'])
-  // await db.insertLocation(floors)
-  // logger('debug', ['mse-sandbox', 'inserting buildings to DB'])
-  // await db.insertBuilding(floors)
-  // logger('debug', ['mse-sandbox', 'inserting floors to DB', 'total floors', floors.length])
-  // await db.insertFloor(floors)
-
-  // await db.insertClientCoords([
-  //   {
-  //     eventTime: '2020-08-03T12:00:00Z',
-  //     mac: 'AA:BB:CC:DD:EE:FF',
-  //     location: 'VGS Skogmo',
-  //     building: 'H-bygning',
-  //     floor: '1etg',
-  //     x: 50,
-  //     y: 40
-  //   },
-  //   {
-  //     eventTime: '2020-08-03T12:00:00Z',
-  //     mac: 'AA:BB:CC:DD:EE:FF',
-  //     location: 'VGS Skogmo',
-  //     building: 'C-bygning',
-  //     floor: '1.etasje',
-  //     x: 30,
-  //     y: 20
-  //   }
-  // ])
-  // const html = `<html><body>${locations.map(loc => `<h1>${loc.maphierarchystring}</h1><img src="data:image/jpeg;base64,${loc.imagebase64}" style="width: 50em;"><br>`)}</body></html>`
-  // require('fs').writeFileSync('./sample-data/mse-data/test.html', html)
-})()
+//   logger('debug', ['mse-sandbox', 'inserting locations to DB'])
+//   await db.insertLocation(floors).then(console.log)
+//   logger('debug', ['mse-sandbox', 'inserting buildings to DB'])
+//   await db.insertBuilding(floors)
+//   logger('debug', ['mse-sandbox', 'inserting floors to DB', 'total floors', floors.length])
+//   await db.insertFloor(floors)
+//   await db.close({ immediate: true })
+// })()
