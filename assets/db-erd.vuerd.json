@@ -278,6 +278,29 @@
             "id": "cf35b0cf-6eb1-9236-f4a1-bc9ca0442bbf"
           },
           {
+            "name": "deleted",
+            "comment": "",
+            "dataType": "BOOLEAN",
+            "default": "false",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 65,
+              "widthDefault": 60
+            },
+            "id": "30e421c6-afbc-fa3c-1f74-7caebb4fec77"
+          },
+          {
             "name": "name",
             "comment": "",
             "dataType": "TEXT",
@@ -302,10 +325,10 @@
           }
         ],
         "ui": {
-          "active": false,
-          "left": 160,
-          "top": 542,
-          "zIndex": 200,
+          "active": true,
+          "left": 161,
+          "top": 536,
+          "zIndex": 249,
           "widthName": 60,
           "widthComment": 60
         },
@@ -822,7 +845,7 @@
           }
         ],
         "ui": {
-          "active": true,
+          "active": false,
           "left": 764,
           "top": 95,
           "zIndex": 230,
@@ -955,8 +978,8 @@
           "columnIds": [
             "5b77879e-ddb3-9e87-bf01-8b699ca48852"
           ],
-          "x": 332.5,
-          "y": 542,
+          "x": 336,
+          "y": 536,
           "direction": "top"
         },
         "id": "18fec805-9813-43fd-4109-5f45b881ed28",
@@ -969,8 +992,8 @@
           "columnIds": [
             "8a8fb17f-e950-94cf-fc36-de2228fdf194"
           ],
-          "x": 505,
-          "y": 567.1666666666667,
+          "x": 511,
+          "y": 564.5833333333334,
           "direction": "right"
         },
         "end": {
@@ -992,8 +1015,8 @@
           "columnIds": [
             "8a8fb17f-e950-94cf-fc36-de2228fdf194"
           ],
-          "x": 505,
-          "y": 617.5000000000001,
+          "x": 511,
+          "y": 621.75,
           "direction": "right"
         },
         "end": {
@@ -1015,8 +1038,8 @@
           "columnIds": [
             "8a8fb17f-e950-94cf-fc36-de2228fdf194"
           ],
-          "x": 505,
-          "y": 667.8333333333335,
+          "x": 511,
+          "y": 678.9166666666666,
           "direction": "right"
         },
         "end": {
