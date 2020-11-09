@@ -23,6 +23,7 @@ const mse = createMse({
   console.error(error)
 })
 
+// Insert floors
 // ;(async () => {
 //   const floors = await mse.getFloors()
 
@@ -32,5 +33,74 @@ const mse = createMse({
 //   await db.insertBuilding(floors)
 //   logger('debug', ['mse-sandbox', 'inserting floors to DB', 'total floors', floors.length])
 //   await db.insertFloor(floors)
+//   await db.query('REFRESH MATERIALIZED VIEW location_view;')
 //   await db.close({ immediate: true })
+// })()
+
+// Check for new floors
+// ;(async () => {
+//   const floors = await mse.getFloors()
+//   const values = floors.map(floor => [floor.locationType, floor.location, floor.building, floor.floor, floor.mseFloorId])
+
+//   const newFloors = (await db.query(format(
+//     `
+//     WITH ins (location_type, location, building, floor, mse_floor_id) AS (
+//       VALUES %L
+//     )
+//     SELECT
+//       ins.location_type AS "locationType",
+//       ins.location,
+//       ins.building,
+//       ins.floor,
+//       ins.mse_floor_id AS "mseFloorId"
+//     FROM location_view lv
+//     RIGHT JOIN ins
+//       ON lv.mse_floor_id = ins.mse_floor_id
+//     WHERE lv.mse_floor_id IS NULL`
+//     , values))).rows
+
+//   // eslint-disable-next-line
+//   if (true) {
+//     logger('debug', ['mse-sandbox', 'inserting locations to DB'])
+//     const locationResult = await db.insertLocation(newFloors)
+//     logger('debug', ['mse-sandbox', 'inserting buildings to DB'])
+//     const buildingResult = await db.insertBuilding(newFloors)
+//     logger('debug', ['mse-sandbox', 'inserting floors to DB', 'total floors', newFloors.length])
+//     const floorResult = await db.insertFloor(newFloors)
+//     await db.query('REFRESH MATERIALIZED VIEW location_view;')
+//     logger('debug', ['mse-sandbox', 'inserted locations', locationResult.rowCount, 'buildings', buildingResult.rowCount, 'floors', floorResult.rowCount])
+//   }
+
+//   await db.close({ immediate: true })
+// })()
+
+// Check for removed floors
+// ;(async () => {
+//   const floors = await mse.getFloors()
+
+//   const values = floors.map(floor => [floor.location, floor.building, floor.floor, floor.mseFloorId])
+
+//   console.log((await db.query(format(
+//     `
+//     WITH ins (location, building, floor, mse_floor_id) AS (
+//       VALUES %L
+//     )
+//     SELECT
+//       f.name,
+//       f.mse_floor_id
+//     FROM floor f
+//     LEFT JOIN ins
+//       ON f.mse_floor_id = ins.mse_floor_id
+//     WHERE ins.mse_floor_id IS NULL`
+//     , values))).rows)
+//   await db.close({ immediate: true })
+// })()
+
+// Get floors for SQL query
+// ;(async () => {
+//   const floors = await mse.getFloors()
+
+//   const values = floors.map(floor => [floor.locationType, floor.location, floor.building, floor.floor, floor.mseFloorId])
+
+//   console.log(format('%L', values))
 // })()
