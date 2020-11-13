@@ -23,7 +23,7 @@ function createConnection () {
  */
 async function setupDB () {
   createConnection()
-  const dbSchemaQuery = readFileSync('./lib/db/db-schema.sql', 'utf8')
+  const dbSchemaQuery = readFileSync('./src/lib/db/db-schema.sql', 'utf8')
   try {
     await pool.query(dbSchemaQuery)
     logger('info', ['timescaledb-interaction', 'setupDB', 'successfully created tables'])
@@ -174,7 +174,7 @@ async function insertFloor (data) {
 async function updateFloor (data) {
   createConnection()
   const client = await pool.connect()
-  const queryRaw = readFileSync('./lib/db/update-floors.sql', 'utf8')
+  const queryRaw = readFileSync('./src/lib/db/update-floors.sql', 'utf8')
   const values = data.map(
     ({ locationType, location, building, floor, mseFloorId }) => [locationType, location, building, floor, mseFloorId]
   )
