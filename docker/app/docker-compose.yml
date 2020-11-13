@@ -3,4 +3,5 @@ services:
   byggbelastning-data-poller:
     container_name: byggbelastning-data-poller
     build: ../../
+    image: byggbelastning-data-poller:latest
     env_file: ./.env

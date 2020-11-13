@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:12-slim
 
 WORKDIR /usr/src/app
 
@@ -6,6 +6,6 @@ COPY ./package*.json ./
 
 RUN npm ci
 
-COPY src/ ./
+COPY src/ ./src/
 
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
