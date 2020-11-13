@@ -1,6 +1,7 @@
 const { logger } = require('@vtfk/logger')
 const db = require('../db/timescaledb-interaction')
 const pLimit = require('p-limit')
+const dummy = require('../dummy')
 
 module.exports = async (mse) => {
   const stopAtTime = await getLastStoppingTime()
@@ -63,7 +64,7 @@ module.exports = async (mse) => {
     }
   })
 
-  const limit = pLimit(5)
+  const limit = pLimit(1)
   await Promise.all(getPageFunctions.map(limit))
 
   logger('info', ['mse-update-client-locations', 'all requests done', 'successful', stats.success, 'failed', stats.failed, 'total clients', stats.totalClients])
@@ -118,6 +119,8 @@ function feetToMeters (feet) {
 }
 
 async function insertClients (clients) {
+  // dummy.save('client-coords-query', clients)
   clients = clients.map(parseMseLocationData)
+  // dummy.save('client-coords-query-parsed', clients)
   return db.insertClientCoords(clients)
 }
