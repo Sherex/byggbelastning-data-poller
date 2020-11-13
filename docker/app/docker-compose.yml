@@ -1,0 +1,6 @@
+version: "3.7"
+services:
+  building-traffic-client:
+    container_name: building-traffic-client
+    build: ../../
+    env_file: ./.env
