@@ -53,15 +53,22 @@ npm i
 mv template.env .env
 ```
 ### Docker scripts
+> Requires: `docker` and `docker-compose`
 ```sh
-# If you have Docker installed you can start a dev DB with:
+# Start the data-poller with:
 npm run docker:start
 
-# Stop DB container 
+# Stop data-poller container 
 npm run docker:stop
 
+# Start a dev DB with:
+npm run docker:db:start
+
+# Stop DB container 
+npm run docker:db:stop
+
 # Stop DB container, delete the DB directory, then start the DB container
-npm run docker:clean_db
+npm run docker:db:clean
 ```
 ### Database scripts
 ```sh
