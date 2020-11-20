@@ -19,14 +19,15 @@ const { getClientsPerLocation, getClients } = createPrime({
 
 ;(async () => {
   if (perLocation) {
-    console.log((await db.query('SELECT COUNT(id) FROM clients_location')).rows[0].count)
+    console.log((await db.query('SELECT COUNT(time) FROM client_count')).rows[0].count)
     const data = await getClientsPerLocation(primeReportNamePerFloor)
     if (writeToDb) {
-      await db.insertClientLocations(data)
+      const result = await db.insertClientCount(data)
+      console.log(`Inserted ${result.rowCount} rows to client_count`)
     } else {
       console.log(data.length)
     }
-    console.log((await db.query('SELECT COUNT(id) FROM clients_location')).rows[0].count)
+    console.log((await db.query('SELECT COUNT(time) FROM client_count')).rows[0].count)
   } else {
     const data = await getClients(primeReportNameClients)
     if (writeToDb) {

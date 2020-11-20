@@ -1,6 +1,6 @@
 require('dotenv').config()
 const { logger } = require('@vtfk/logger')
-const { createHmac, createHash } = require('crypto')
+const { createHmac } = require('crypto')
 const { Pool } = require('pg')
 const { readFileSync } = require('fs')
 const format = require('pg-format')
@@ -289,51 +289,46 @@ async function insertClientCoords (data) {
  * @param data Either array of parsed objects or one object.
  * @return {Promise<any[]>}
  */
-async function insertClientLocations (data) {
+async function insertClientCount (data) {
   createConnection()
   data = Array.isArray(data) ? data : [data]
 
-  logger('debug', ['timescaledb-interaction', 'insertClientLocations', 'start', 'format data for insert', 'data length', data.length])
+  logger('debug', ['timescaledb-interaction', 'insertClientCount', 'start', 'format data for insert', 'data length', data.length])
 
-  const values = data.map(client => {
-    const time = new Date(client.eventTime)
-    const stringConcat = `${time}-${client.key.location}>${client.key.building}>${client.key.floor}`
-    const idHash = createHash('md5').update(stringConcat).digest('hex')
-    return [
-      time,
-      idHash,
-      client.key.location,
-      client.key.building,
-      client.key.floor,
-      client.authCount,
-      client.assoCount
-    ]
-  })
+  const values = data.map(client => ([
+    new Date(client.eventTime),
+    client.key.location,
+    client.key.building,
+    client.key.floor,
+    client.authCount,
+    client.assoCount
+  ]))
 
-  logger('debug', ['timescaledb-interaction', 'insertClientLocations', 'filter out duplicates', 'data length', values.length])
-
-  const newIds = [values.map(val => val[1])]
-  let { rows: existingHashes } = await pool.query('SELECT id FROM clients_location WHERE id = ANY ($1)', newIds)
-  existingHashes = existingHashes.map(row => row.id)
-
-  const filteredValues = values.filter(row => !existingHashes.includes(row[1]))
-
-  logger('info', ['timescaledb-interaction', 'insertClientLocations', 'data filtered', 'unique', filteredValues.length, 'duplicates', values.length - filteredValues.length])
-
-  if (filteredValues.length >= 1) {
-    try {
-      logger('debug', ['timescaledb-interaction', 'insertClientLocations', 'inserting client counts per location', 'length', filteredValues.length])
-      const query = format('INSERT INTO clients_location(time, id, location, building, floor, authCount, assoCount) VALUES %L', filteredValues)
-      return pool.query(query)
-    } catch (error) {
-      logger('error', ['timescaledb-interaction', 'insertClientLocations', 'failed to insert location client counts', 'error', error.message])
-      throw error
-    } finally {
-      this.close()
-    }
-  } else {
-    logger('debug', ['timescaledb-interaction', 'insertClientLocations', 'no clients to insert'])
-    return false
+  try {
+    logger('debug', ['timescaledb-interaction', 'insertClientCount', 'inserting client counts per location', 'length', values.length])
+    const query = `
+      WITH ins (time, location, building, floor, auth_count, asso_count) AS (
+        VALUES %L
+      )
+      INSERT INTO client_count (time, floor_id, auth_count, asso_count)
+        SELECT
+          "time"::timestamptz,
+          lv.floor_id,
+          "auth_count"::INTEGER,
+          "asso_count"::INTEGER
+        FROM ins
+        INNER JOIN location_view lv ON
+          location = lv.location_fullname AND
+          building = lv.building_name AND
+          floor = lv.floor_name
+      ON CONFLICT DO NOTHING;
+    `
+    return await pool.query(format(query, values))
+  } catch (error) {
+    logger('error', ['timescaledb-interaction', 'insertClientCount', 'failed to insert location client counts', 'error', error.message])
+    throw error
+  } finally {
+    this.close()
   }
 }
 
@@ -418,7 +413,7 @@ module.exports = {
   insertFloor,
   updateFloor,
   insertClientCoords,
-  insertClientLocations,
+  insertClientCount,
   getClientCoords,
   insertLocationMaps,
   query,
