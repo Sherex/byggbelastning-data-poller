@@ -114,18 +114,21 @@ async function insertLocationType (data) {
 async function insertBuilding (data) {
   createConnection()
   const client = await pool.connect()
-  const values = data.map(({ location, building }) => [location, building])
+  const values = data.map(({ location, locationType, building }) => [location, locationType, building])
 
   try {
     const query = format(`
-      WITH ins (location, building) AS (
+      WITH ins (location, type, building) AS (
         VALUES %L
       )
       INSERT INTO building (name, location_id)
         SELECT ins.building, l.id
           FROM ins
+          INNER JOIN location_type lt
+            ON lt.code = ins.type
           INNER JOIN location l
-            ON l.name = ins.location
+            ON  l.name = ins.location
+            AND l.type_id = lt.id
           GROUP BY (l.id, ins.building)
           ORDER BY (l.id, ins.building)
       ON CONFLICT DO NOTHING;
@@ -142,22 +145,24 @@ async function insertBuilding (data) {
 async function insertFloor (data) {
   createConnection()
   const client = await pool.connect()
-  const values = data.map(({ location, building, floor, mseFloorId }) => [location, building, floor, mseFloorId])
+  const values = data.map(({ location, locationType, building, floor, mseFloorId }) => [location, locationType, building, floor, mseFloorId])
 
   try {
     const query = format(`
-      WITH ins (location, building, floor, mse_floor_id) AS (
+      WITH ins (location, type, building, floor, mse_floor_id) AS (
         VALUES %L
       )
       INSERT INTO floor (name, building_id, mse_floor_id)
         SELECT ins.floor, b.id, ins.mse_floor_id
           FROM ins
+          INNER JOIN location_type lt
+            ON lt.code = ins.type
           INNER JOIN location l
-            ON l.name = ins.location
+            ON  l.name = ins.location
+            AND l.type_id = lt.id
           INNER JOIN building b
-            ON
-              b.location_id = l.id AND
-              b.name = ins.building
+            ON  b.location_id = l.id
+            AND b.name = ins.building
           GROUP BY (l.id, b.id, ins.floor, ins.mse_floor_id)
           ORDER BY (l.id, b.id, ins.floor, ins.mse_floor_id)
       ON CONFLICT DO NOTHING;
@@ -204,7 +209,6 @@ async function updateFloor (data) {
   }
 }
 
-// TODO: Eliminate deadlock bug, (queue? p-limit?)
 // TODO: If mse_floor_id = null (new floor in prime) alert, skip and continue
 const clientCoordsQueue = {
   count: 0,
