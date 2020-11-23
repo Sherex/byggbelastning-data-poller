@@ -6,7 +6,8 @@ const dummy = require('../dummy')
 module.exports = async (mse) => {
   const stopAtTime = await getLastStoppingTime()
   const path = 'api/contextaware/v1/location/history/clients.json'
-  const pageSize = 5000
+  const pageSize = process.env.MSE_PAGE_SIZE || 5000
+  const pollerCount = process.env.MSE_POLLER_COUNT || 1
 
   logger('debug', ['mse-update-client-locations', 'GET path', path])
   let { data } = await mse.get(`${path}?page=1&pageSize=${pageSize}&sortBy=lastLocatedTime:desc`)
@@ -64,7 +65,7 @@ module.exports = async (mse) => {
     }
   })
 
-  const limit = pLimit(1)
+  const limit = pLimit(pollerCount)
   await Promise.all(getPageFunctions.map(limit))
 
   logger('info', ['mse-update-client-locations', 'all requests done', 'successful', stats.success, 'failed', stats.failed, 'total clients', stats.totalClients])
