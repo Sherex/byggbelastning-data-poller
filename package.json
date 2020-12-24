@@ -22,7 +22,7 @@
     "axios": "^0.19.2",
     "byline": "^5.0.0",
     "csv-parser": "^2.3.3",
-    "date-and-time": "^0.14.0",
+    "date-and-time": "^0.14.2",
     "dotenv": "^8.2.0",
     "normalize-date": "0.0.4",
     "p-limit": "^3.0.2",
