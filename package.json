@@ -18,23 +18,23 @@
   "author": "Ingar Helgesen (https://github.com/Sherex)",
   "license": "MIT",
   "dependencies": {
-    "@vtfk/logger": "^2.3.0",
-    "axios": "^0.19.2",
+    "@vtfk/logger": "^2.4.1",
+    "axios": "^0.21.1",
     "byline": "^5.0.0",
-    "csv-parser": "^2.3.3",
-    "date-and-time": "^0.14.0",
+    "csv-parser": "^3.0.0",
+    "date-and-time": "^0.14.2",
     "dotenv": "^8.2.0",
     "normalize-date": "0.0.4",
-    "p-limit": "^3.0.2",
-    "pg": "^8.3.0",
+    "p-limit": "^3.1.0",
+    "pg": "^8.5.1",
     "pg-format": "^1.0.4"
   },
   "devDependencies": {
-    "eslint": "^7.10.0",
-    "eslint-config-standard": "^14.1.1",
+    "eslint": "^7.19.0",
+    "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.1.0"
   }
 }
